@@ -454,7 +454,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               Row(
                                 children: [
-
                                   Icon(Icons.lock_outline, size: 17),
                                   Text(' $email',
                                       style: TextStyle(fontSize: 20)),
@@ -477,8 +476,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               SizedBox(height: screenHeight * 0.04),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   Stack(
                                     clipBehavior: Clip.none,
@@ -562,10 +559,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                     ],
                                   ),
+                                  Spacer(),
                                   Column(children: [
                                     Text('${userController.posts.length}'),
                                     Text('posts')
                                   ]),
+                                  Spacer(),
                                   Column(
                                     children: [
                                       //Text('0'),
@@ -576,9 +575,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           '$followersCount',
                                         );
                                       }),
+
                                       Text('followers'),
                                     ],
                                   ),
+                                  Spacer(),
                                   Column(
                                     children: [
                                       Obx(
@@ -596,8 +597,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: screenHeight * 0.02),
-                              Text('$username', style: TextStyle(fontSize: 16)),
+                              SizedBox(height: screenHeight * 0.01),
+                              Text('$username',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)),
                               SizedBox(height: screenHeight * 0.02),
                               Row(
                                 mainAxisAlignment:
@@ -705,8 +709,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ],
                               ),
                               SizedBox(
-                                height:
-                                    300, // Adjust height as needed for TabBarView
+                                height: 300,
                                 child: TabBarView(
                                   children: [
                                     // Posts Tab
@@ -728,8 +731,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   post['imageUrl']),
                                               fit: BoxFit.cover,
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(8),
                                           ),
                                         );
                                       },

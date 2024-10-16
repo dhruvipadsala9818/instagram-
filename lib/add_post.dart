@@ -1,58 +1,3 @@
-// import 'dart:io';
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-//
-// import 'controllers/add_post_controller.dart';
-//
-// class AddPostScreen extends StatelessWidget {
-//   final AddPostController _controller = Get.put(AddPostController());
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Add Post'),
-//         actions: [
-//           Obx(() => IconButton(
-//                 icon: Icon(Icons.upload_file),
-//                 onPressed: _controller.isUploading.value
-//                     ? null
-//                     : _controller.uploadImage,
-//               )),
-//         ],
-//       ),
-//       body: SingleChildScrollView(
-//         child: Center(
-//           child: Obx(() {
-//             if (_controller.isUploading.value) {
-//               return CircularProgressIndicator();
-//             } else {
-//               return Column(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: [
-//                   _controller.image.value == null
-//                       ? Text("No image selected.")
-//                       : Column(
-//                           children: [
-//                             Image.file(File(_controller.image.value!.path)),
-//                             SizedBox(height: 20),
-//                           ],
-//                         ),
-//                   if (_controller.image.value == null)
-//                     IconButton(
-//                       icon: Icon(Icons.add_a_photo),
-//                       iconSize: 50,
-//                       onPressed: _controller.pickImage,
-//                     ),
-//                 ],
-//               );
-//             }
-//           }),
-//         ),
-//       ),
-//     );
-//   }
-// }
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -94,7 +39,6 @@ class AddPostScreen extends StatelessWidget {
           child: Obx(() {
             if (_controller.isUploading.value) {
               return SizedBox(
-                height: availableHeight * 0.5,
                 child: CircularProgressIndicator(),
               );
             } else {

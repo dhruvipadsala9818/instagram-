@@ -48,7 +48,9 @@ class ReelsScreen extends StatelessWidget {
             return const Center(child: Text('No videos found.'));
           }
 
-          return ListView.builder(
+          // Use a PageView for vertical scrolling between videos
+          return PageView.builder(
+            scrollDirection: Axis.vertical, // Vertical swipe direction
             itemCount: controller.videoUrls.length,
             itemBuilder: (context, index) {
               return VideoPlayerWidget(videoUrl: controller.videoUrls[index]);
@@ -79,7 +81,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
       ..initialize().then((_) {
         setState(() {});
-        _isPlaying = _controller.value.isPlaying;
+        _controller.play();
+        _isPlaying = true;
       });
   }
 
@@ -107,9 +110,16 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         ? Stack(
             alignment: Alignment.center,
             children: [
-              AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller),
+              // Make the video player fill the entire screen
+              SizedBox.expand(
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: SizedBox(
+                    width: _controller.value.size.width,
+                    height: _controller.value.size.height,
+                    child: VideoPlayer(_controller),
+                  ),
+                ),
               ),
               GestureDetector(
                 onTap: _togglePlayPause,

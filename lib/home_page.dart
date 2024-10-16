@@ -414,25 +414,25 @@ class HomePage extends StatelessWidget {
                         itemCount: 1 + controller.followedUserStories.length,
                         itemBuilder: (context, index) {
                           if (index == 0) {
-                            return Column(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    if (controller.userStoryUrls.isNotEmpty) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ViewStory(
-                                              controller.userStoryUrls
-                                                  .toList()),
-                                        ),
-                                      );
-                                    } else {
-                                      controller.pickImage();
-                                    }
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 10),
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Column(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (controller.userStoryUrls.isNotEmpty) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ViewStory(
+                                                controller.userStoryUrls
+                                                    .toList()),
+                                          ),
+                                        );
+                                      } else {
+                                        controller.pickImage();
+                                      }
+                                    },
                                     child: CircleAvatar(
                                       radius: height * 0.05,
                                       backgroundColor: Colors.grey,
@@ -460,27 +460,27 @@ class HomePage extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                ),
-                                const Text("Your story"),
-                              ],
+                                  const Text("Your story"),
+                                ],
+                              ),
                             );
                           } else {
                             final followedUserStory =
                                 controller.followedUserStories[index - 1];
-                            return Column(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ViewStory(
-                                            followedUserStory['storyUrls']),
-                                      ),
-                                    );
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 10),
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Column(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ViewStory(
+                                              followedUserStory['storyUrls']),
+                                        ),
+                                      );
+                                    },
                                     child: CircleAvatar(
                                       radius: height * 0.05,
                                       backgroundColor: Colors.grey,
@@ -506,17 +506,17 @@ class HomePage extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                ),
-                                Text(followedUserStory['username']),
-                              ],
+                                  Text(followedUserStory['username']),
+                                ],
+                              ),
                             );
                           }
                         },
                       );
                     }),
                     Positioned(
-                      top: 54,
-                      left: 60,
+                      top: 51,
+                      left: 55,
                       child: GestureDetector(
                         onTap: () {
                           controller.pickImage();
@@ -529,7 +529,11 @@ class HomePage extends StatelessWidget {
                             color: Colors.blue,
                             border: Border.all(color: Colors.white),
                           ),
-                          child: const Icon(Icons.add, color: Colors.white),
+                          child: const Icon(
+                            Icons.add,
+                            color: Colors.white,
+                            size: 15,
+                          ),
                         ),
                       ),
                     ),
