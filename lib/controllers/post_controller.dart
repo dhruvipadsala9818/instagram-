@@ -53,7 +53,7 @@ class UserController extends ChangeNotifier {
 
         if (snapshot.docs.isNotEmpty) {
           posts = snapshot.docs.map((doc) {
-            return {'imageUrl': doc['imageUrl'], 'uid': doc['uid']};
+            return {'mediaUrl': doc['mediaUrl'], 'uid': doc['uid']};
           }).toList();
 
           print('Fetched posts: $posts');
@@ -82,7 +82,7 @@ class UserController extends ChangeNotifier {
 
         if (snapshot.docs.isNotEmpty) {
           reels = snapshot.docs.map((doc) {
-            return {'videoUrl': doc['videoUrl'], 'uid': doc['uid']};
+            return {'mediaUrl': doc['mediaUrl'], 'uid': doc['uid']};
           }).toList();
 
           print('Fetched posts: $reels');

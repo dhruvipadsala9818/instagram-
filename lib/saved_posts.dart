@@ -65,7 +65,8 @@ class SavedPostsPage extends StatelessWidget {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(controller.posts[index]['image']),
+                        image:
+                            NetworkImage(controller.posts[index]['mediaUrl']),
                         fit: BoxFit.cover,
                       ),
                     ),

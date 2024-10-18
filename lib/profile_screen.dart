@@ -412,7 +412,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       setState(() {
         posts = snapshot.docs.map((doc) {
-          return {'image': doc['imageUrl'], 'uid': doc['uid']};
+          return {'image': doc['mediaUrl'], 'uid': doc['uid']};
         }).toList();
       });
     }
@@ -728,13 +728,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           decoration: BoxDecoration(
                                             image: DecorationImage(
                                               image: NetworkImage(
-                                                  post['imageUrl']),
+                                                  post['mediaUrl']),
                                               fit: BoxFit.cover,
                                             ),
                                           ),
                                         );
                                       },
                                     ),
+
                                     // Reels Tab
                                     GridView.builder(
                                       gridDelegate:
@@ -758,7 +759,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 Positioned.fill(
                                                   child: VideoPlayerWidget(
                                                       videoUrl:
-                                                          reel['videoUrl']),
+                                                          reel['mediaUrl']),
                                                 ),
                                                 Positioned(
                                                   bottom: 10,

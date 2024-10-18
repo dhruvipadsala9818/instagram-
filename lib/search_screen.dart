@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -105,13 +106,20 @@ class SearchScreen extends StatelessWidget {
                               searchController.allPostsAndReels[index];
 
                           if (postOrReel['type'] == 'image') {
-                            return Image.network(
-                              postOrReel['imageUrl'],
+                            return CachedNetworkImage(
+                              imageUrl: postOrReel['mediaUrl'],
+                              placeholder: (context, url) => Container(
+                                color: Colors.grey[200],
+                              ),
+                              errorWidget: (context, url, error) => Container(
+                                color: Colors.grey[200],
+                                child: Icon(Icons.error, color: Colors.red),
+                              ),
                               fit: BoxFit.cover,
                             );
                           } else if (postOrReel['type'] == 'video') {
                             return VideoPlayerWidget(
-                                videoUrl: postOrReel['videoUrl']);
+                                videoUrl: postOrReel['mediaUrl']);
                           }
 
                           return const SizedBox.shrink();
@@ -168,97 +176,6 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
             aspectRatio: _controller.value.aspectRatio,
             child: VideoPlayer(_controller),
           )
-        : const SizedBox.shrink();
+        : const SizedBox.shrink(); // No loading spinner here
   }
 }
-// import 'package:flutter/material.dart';
-// import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-//
-// class SearchScreen extends StatelessWidget {
-//   const SearchScreen({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Staggered Grid Example'),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(8.0),
-//         child: MasonryGridView.count(
-//           crossAxisCount: 4, // Number of columns
-//           mainAxisSpacing: 4, // Space between rows
-//           crossAxisSpacing: 4, // Space between columns
-//           itemCount: 5, // Number of tiles
-//           itemBuilder: (context, index) {
-//             return _buildTile(index);
-//           },
-//         ),
-//       ),
-//     );
-//   }
-//
-//   // Method to build each tile
-//   Widget _buildTile(int index) {
-//     int crossAxisCellCount;
-//     int mainAxisCellCount;
-//
-//     switch (index) {
-//       case 0:
-//         crossAxisCellCount = 4;
-//         mainAxisCellCount = 4;
-//         break;
-//       case 1:
-//         crossAxisCellCount = 1;
-//         mainAxisCellCount = 4;
-//         break;
-//       case 2:
-//         crossAxisCellCount = 1;
-//         mainAxisCellCount = 1;
-//         break;
-//       case 3:
-//         crossAxisCellCount = 1;
-//         mainAxisCellCount = 1;
-//         break;
-//       case 4:
-//         crossAxisCellCount = 4;
-//         mainAxisCellCount = 2;
-//         break;
-//       default:
-//         crossAxisCellCount = 1;
-//         mainAxisCellCount = 1;
-//     }
-//
-//     return SizedBox(
-//       width: crossAxisCellCount * 50, // Adjust size as per your need
-//       height: mainAxisCellCount * 50,
-//       child: Tile(index: index),
-//     );
-//   }
-// }
-//
-// // A simple custom widget for the grid tiles
-// class Tile extends StatelessWidget {
-//   final int index;
-//
-//   const Tile({super.key, required this.index});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       decoration: BoxDecoration(
-//         color: Colors.blueAccent,
-//         borderRadius: BorderRadius.circular(8),
-//       ),
-//       child: Center(
-//         child: Text(
-//           'Tile $index',
-//           style: const TextStyle(
-//             fontSize: 18,
-//             color: Colors.white,
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

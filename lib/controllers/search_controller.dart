@@ -148,7 +148,7 @@ class SearchScreenController extends GetxController {
         List<Map<String, dynamic>> allPosts = snapshot.docs.map((doc) {
           return {
             'type': 'image', // Define as post type
-            'imageUrl': doc['imageUrl'] ?? '',
+            'mediaUrl': doc['mediaUrl'] ?? '',
           };
         }).toList();
 
@@ -157,7 +157,7 @@ class SearchScreenController extends GetxController {
             List<Map<String, dynamic>> allReels = snapshot.docs.map((doc) {
               return {
                 'type': 'video', // Define as reel type
-                'videoUrl': doc['videoUrl'] ?? '',
+                'mediaUrl': doc['mediaUrl'] ?? '',
               };
             }).toList();
 
