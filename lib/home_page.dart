@@ -190,7 +190,7 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
-              // Posts Section
+
               Obx(
                 () => ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
@@ -198,18 +198,25 @@ class HomePage extends StatelessWidget {
                   itemCount: controller.posts.length,
                   itemBuilder: (context, index) {
                     final post = controller.posts[index];
+                    final postId = post['uid']; // Assuming post has a unique id
+
+                    // Fetch the last comment for this post
+                    final lastComment = controller.comments[postId];
+
                     return Container(
-                      height: height * 0.51,
+                      height: height * 0.55, // Adjust height to fit comments
                       width: width * 0.9,
                       color: Colors.transparent,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // Post Header (user profile and location)
                           Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal: height * 0.015),
                             child: Row(
                               children: [
+                                // User Profile Image
                                 Container(
                                   width: height * 0.08,
                                   height: height * 0.08,
@@ -237,6 +244,7 @@ class HomePage extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(width: width * 0.02),
+                                // Username and Location
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -249,7 +257,10 @@ class HomePage extends StatelessWidget {
                               ],
                             ),
                           ),
+
                           SizedBox(height: height * 0.01),
+
+                          // Post Image
                           Container(
                             height: height * 0.36,
                             width: double.infinity,
@@ -260,11 +271,15 @@ class HomePage extends StatelessWidget {
                               ),
                             ),
                           ),
+
                           SizedBox(height: height * 0.01),
+
+                          // Action Icons (Like, Comment, Share, Save)
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: Row(
                               children: [
+                                // Like Button
                                 GestureDetector(
                                   onTap: () {
                                     controller.toggleFavorite(index);
@@ -279,14 +294,15 @@ class HomePage extends StatelessWidget {
                                       )),
                                 ),
                                 SizedBox(width: width * 0.03),
+
+                                // Comment Button
                                 GestureDetector(
                                   onTap: () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => CommentScreen(
-                                            postId: post[
-                                                'uid']), // Assuming post has an 'id'
+                                        builder: (context) =>
+                                            CommentScreen(postId: post['uid']),
                                       ),
                                     );
                                   },
@@ -294,8 +310,12 @@ class HomePage extends StatelessWidget {
                                       const Icon(Icons.mode_comment_outlined),
                                 ),
                                 SizedBox(width: width * 0.03),
+
+                                // Share Button
                                 const Icon(Icons.send_outlined),
                                 const Spacer(),
+
+                                // Save Button
                                 GestureDetector(
                                   onTap: () {
                                     controller.toggleBookmark(index);
@@ -313,6 +333,25 @@ class HomePage extends StatelessWidget {
                                 ),
                               ],
                             ),
+                          ),
+
+                          // Display Last Comment
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            child: lastComment != null
+                                ? Text(
+                                    '${lastComment['username']}  ${lastComment['comment']}',
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                    ),
+                                  )
+                                : Text(
+                                    'No comments yet',
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
                           ),
                         ],
                       ),

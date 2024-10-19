@@ -18,6 +18,7 @@ class HomeController extends GetxController {
   var userFavorites = <String>[].obs;
   var userBookmarks = <String>[].obs;
   var following = <String>[].obs;
+  var comments = <String, Map<String, dynamic>>{}.obs;
 
   @override
   void onInit() {
@@ -46,6 +47,25 @@ class HomeController extends GetxController {
     userBookmarks.clear();
     following.clear();
     followedUserStories.clear();
+  }
+
+  void fetchLastComment(String postId) async {
+    QuerySnapshot commentSnapshot = await FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .orderBy('timestamp', descending: true)
+        .limit(1)
+        .get();
+
+    if (commentSnapshot.docs.isNotEmpty) {
+      // Assign the comment data to the map
+      comments[postId] =
+          commentSnapshot.docs.first.data() as Map<String, dynamic>;
+    } else {
+      // Assign an empty map if no comment is found
+      comments[postId] = {};
+    }
   }
 
   Future<void> fetchFollowingList() async {
@@ -153,6 +173,11 @@ class HomeController extends GetxController {
 
               updateFavoritesList();
               updateBookmarksList();
+
+              // Fetch last comments for each post
+              for (var post in posts) {
+                fetchLastComment(post['uid']);
+              }
             });
           } else {
             posts.clear();
