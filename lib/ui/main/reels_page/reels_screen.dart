@@ -110,7 +110,6 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         ? Stack(
             alignment: Alignment.center,
             children: [
-              // Make the video player fill the entire screen
               SizedBox.expand(
                 child: FittedBox(
                   fit: BoxFit.cover,

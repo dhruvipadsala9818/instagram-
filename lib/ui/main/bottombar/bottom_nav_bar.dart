@@ -8,14 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:instagram/reels_screen.dart';
+import 'package:instagram/ui/main/reels_page/reels_screen.dart';
 import 'package:video_player/video_player.dart';
 
-import 'controllers/add_post_controller.dart';
-import 'controllers/home_controller.dart';
-import 'home_page.dart';
-import 'profile_screen.dart';
-import 'search_screen.dart';
+import '../../../controllers/add_post_controller.dart';
+import '../../../controllers/home_controller.dart';
+import '../home_page/home_page.dart';
+import '../profile_page/profile_screen.dart';
+import '../search_page/search_screen.dart';
 
 class BottomNavBar extends StatefulWidget {
   BottomNavBar({super.key});
@@ -105,23 +105,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
     );
   }
 
-  void _pickMedia() async {
-    final ImagePicker picker = ImagePicker();
-
-    final XFile? selectedImage =
-        await picker.pickImage(source: ImageSource.gallery);
-    if (selectedImage != null) {
-      Get.to(() => MediaPreviewScreen(mediaFile: selectedImage));
-      return;
-    }
-
-    final XFile? selectedVideo =
-        await picker.pickVideo(source: ImageSource.gallery);
-    if (selectedVideo != null) {
-      Get.to(() => MediaPreviewScreen(mediaFile: selectedVideo));
-    }
-  }
-
   void pickMedia() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.media,
@@ -131,49 +114,23 @@ class _BottomNavBarState extends State<BottomNavBar> {
     if (result != null) {
       final pickedFile = result.files.first;
 
-      // Convert PlatformFile to XFile
       final xFile = XFile(pickedFile.path!);
 
       if (pickedFile.extension == 'jpg' ||
           pickedFile.extension == 'png' ||
           pickedFile.extension == 'jpeg') {
         image.value = pickedFile;
-        // Navigate to MediaPreviewScreen
         Get.to(() => MediaPreviewScreen(mediaFile: xFile));
       } else if (pickedFile.extension == 'mp4' ||
           pickedFile.extension == 'mov' ||
           pickedFile.extension == 'avi') {
         video.value = pickedFile;
-        // Navigate to MediaPreviewScreen
         Get.to(() => MediaPreviewScreen(mediaFile: xFile));
       }
     } else {
       print("No media selected");
     }
   }
-
-// Future<void> pickMedia() async {
-//   FilePickerResult? result = await FilePicker.platform.pickFiles(
-//     type: FileType.media,
-//     allowMultiple: false,
-//   );
-//
-//   if (result != null) {
-//     final pickedFile = result.files.first;
-//
-//     if (pickedFile.extension == 'jpg' ||
-//         pickedFile.extension == 'png' ||
-//         pickedFile.extension == 'jpeg') {
-//       image.value = pickedFile;
-//     } else if (pickedFile.extension == 'mp4' ||
-//         pickedFile.extension == 'mov' ||
-//         pickedFile.extension == 'avi') {
-//       video.value = pickedFile;
-//     }
-//   } else {
-//     print("No media selected");
-//   }
-// }
 }
 
 class MediaPreviewScreen extends StatelessWidget {
@@ -196,7 +153,7 @@ class MediaPreviewScreen extends StatelessWidget {
             child: isImage
                 ? Container(
                     height: 400,
-                    width: double.infinity, // Full width
+                    width: double.infinity,
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       borderRadius: BorderRadius.circular(8),

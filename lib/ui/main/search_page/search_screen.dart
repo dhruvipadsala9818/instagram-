@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:video_player/video_player.dart';
 
-import 'controllers/search_controller.dart';
+import '../../../controllers/search_controller.dart';
 
 class SearchScreen extends StatelessWidget {
   final SearchScreenController searchController =
@@ -200,6 +200,6 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
             aspectRatio: _controller.value.aspectRatio,
             child: VideoPlayer(_controller),
           )
-        : const SizedBox.shrink(); // No loading spinner here
+        : const SizedBox.shrink();
   }
 }

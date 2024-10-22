@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'controllers/add_post_controller.dart';
+import '../../../controllers/add_post_controller.dart';
 
 class AddPostScreen extends StatelessWidget {
   final AddPostController _controller = Get.put(AddPostController());

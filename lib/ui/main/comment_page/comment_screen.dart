@@ -185,9 +185,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'bottom_nav_bar.dart';
-import 'controllers/home_controller.dart';
-import 'home_page.dart';
+import '../bottombar/bottom_nav_bar.dart';
+import '../../../controllers/home_controller.dart';
 
 class CommentScreen extends StatefulWidget {
   final HomeController controller = Get.find();
@@ -206,23 +205,21 @@ class _CommentScreenState extends State<CommentScreen> {
   @override
   void initState() {
     super.initState();
-    _loadComments();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showBottomSheet();
     });
   }
 
-  void _loadComments() {
-    FirebaseFirestore.instance
+  Future<void> _loadComments() async {
+    final snapshot = await FirebaseFirestore.instance
         .collection('posts')
         .doc(widget.postId)
         .collection('comments')
         .orderBy('timestamp', descending: true)
-        .snapshots()
-        .listen((snapshot) {
-      setState(() {
-        comments = snapshot.docs;
-      });
+        .get();
+
+    setState(() {
+      comments = snapshot.docs;
     });
   }
 
@@ -259,12 +256,15 @@ class _CommentScreenState extends State<CommentScreen> {
           });
 
           _controller.clear();
+          _loadComments();
         }
       }
     }
   }
 
-  void _showBottomSheet() {
+  void _showBottomSheet() async {
+    await _loadComments();
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -323,6 +323,7 @@ class BottomCommentSheet extends StatelessWidget {
       ),
       child: Column(
         children: [
+          // Drag handle
           Container(
             height: 5,
             width: 40,
@@ -332,43 +333,47 @@ class BottomCommentSheet extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
+
           Expanded(
-            child: SingleChildScrollView(
-              controller: scrollController,
-              child: Column(
-                children: [
-                  ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: comments.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            (comments[index].data() as Map<String, dynamic>)
-                                    .containsKey('profileImageUrl')
-                                ? comments[index]['profileImageUrl']
-                                : 'https://via.placeholder.com/150',
+            child: comments.isNotEmpty
+                ? SingleChildScrollView(
+                    controller: scrollController,
+                    child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: comments.length,
+                      itemBuilder: (context, index) {
+                        var commentData =
+                            comments[index].data() as Map<String, dynamic>;
+                        return ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              commentData.containsKey('profileImageUrl')
+                                  ? commentData['profileImageUrl']
+                                  : 'https://via.placeholder.com/150',
+                            ),
                           ),
-                        ),
-                        title: Text(
-                          (comments[index].data() as Map<String, dynamic>)
-                                  .containsKey('username')
-                              ? comments[index]['username']
-                              : 'Unknown User',
-                        ),
-                        subtitle: Text(comments[index]['comment']),
-                      );
-                    },
+                          title: Text(
+                            commentData.containsKey('username')
+                                ? commentData['username']
+                                : 'Unknown User',
+                          ),
+                          subtitle: Text(commentData['comment']),
+                        );
+                      },
+                    ),
+                  )
+                : Center(
+                    child: Text('No comments yet, be the first!'),
                   ),
-                  const SizedBox(height: 10),
-                ],
-              ),
-            ),
           ),
+          const SizedBox(height: 10),
+
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
                   height: 40,
@@ -394,7 +399,6 @@ class BottomCommentSheet extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 10),
-
                 Flexible(
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 10),
@@ -410,18 +414,15 @@ class BottomCommentSheet extends StatelessWidget {
                       ),
                       onSubmitted: (_) {
                         addComment();
-                        textController.clear();
+                        // textController.clear();
                       },
                     ),
                   ),
                 ),
-
-                // Send button
                 IconButton(
                   icon: Icon(Icons.send),
                   onPressed: () {
                     addComment();
-                    textController.clear();
                   },
                 ),
               ],

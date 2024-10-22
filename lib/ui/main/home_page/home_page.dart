@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 
-import 'comment_screen.dart';
-import 'controllers/home_controller.dart';
+import '../comment_page/comment_screen.dart';
+import '../../../controllers/home_controller.dart';
 
 class HomePage extends StatelessWidget {
   final HomeController controller = Get.put(HomeController());
@@ -16,6 +16,8 @@ class HomePage extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      // resizeToAvoidBottomInset: true,
+      // extendBody: true,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -198,25 +200,22 @@ class HomePage extends StatelessWidget {
                   itemCount: controller.posts.length,
                   itemBuilder: (context, index) {
                     final post = controller.posts[index];
-                    final postId = post['uid']; // Assuming post has a unique id
+                    final postId = post['uid'];
 
-                    // Fetch the last comment for this post
                     final lastComment = controller.comments[postId];
 
                     return Container(
-                      height: height * 0.55, // Adjust height to fit comments
+                      height: height * 0.55,
                       width: width * 0.9,
                       color: Colors.transparent,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Post Header (user profile and location)
                           Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal: height * 0.015),
                             child: Row(
                               children: [
-                                // User Profile Image
                                 Container(
                                   width: height * 0.08,
                                   height: height * 0.08,
@@ -244,7 +243,6 @@ class HomePage extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(width: width * 0.02),
-                                // Username and Location
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -274,7 +272,6 @@ class HomePage extends StatelessWidget {
 
                           SizedBox(height: height * 0.01),
 
-                          // Action Icons (Like, Comment, Share, Save)
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: Row(
@@ -295,9 +292,31 @@ class HomePage extends StatelessWidget {
                                 ),
                                 SizedBox(width: width * 0.03),
 
-                                // Comment Button
                                 GestureDetector(
                                   onTap: () {
+                                    // showModalBottomSheet(
+                                    //   context: context,
+                                    //   isScrollControlled: true,
+                                    //   builder: (context) => Padding(
+                                    //     padding: EdgeInsets.only(
+                                    //         bottom: MediaQuery.of(context)
+                                    //             .viewInsets
+                                    //             .bottom),
+                                    //     child: Container(
+                                    //       height: 400,
+                                    //       color: Colors.red,
+                                    //       child: Column(
+                                    //         mainAxisSize: MainAxisSize.min,
+                                    //         children: [
+                                    //           SizedBox(
+                                    //             height: 200,
+                                    //           ),
+                                    //           TextField(),
+                                    //         ],
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    // );
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -311,11 +330,9 @@ class HomePage extends StatelessWidget {
                                 ),
                                 SizedBox(width: width * 0.03),
 
-                                // Share Button
                                 const Icon(Icons.send_outlined),
                                 const Spacer(),
 
-                                // Save Button
                                 GestureDetector(
                                   onTap: () {
                                     controller.toggleBookmark(index);
@@ -335,7 +352,6 @@ class HomePage extends StatelessWidget {
                             ),
                           ),
 
-                          // Display Last Comment
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 5),

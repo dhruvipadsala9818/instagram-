@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'controllers/edit_profile_controller.dart';
+import '../../../controllers/edit_profile_controller.dart';
 
 class EditProfileScreen extends StatelessWidget {
   final EditProfileController _controller = Get.put(EditProfileController());

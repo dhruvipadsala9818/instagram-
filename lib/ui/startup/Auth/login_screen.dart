@@ -3,8 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:instagram/Auth/register_screen.dart';
-import 'package:instagram/bottom_nav_bar.dart';
+import 'package:instagram/ui/main/bottombar/bottom_nav_bar.dart';
+
+import 'register_screen.dart';
 
 class LogInScreen extends StatefulWidget {
   @override

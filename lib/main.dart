@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:instagram/Auth/login_screen.dart';
-import 'package:instagram/bottom_nav_bar.dart';
-import 'package:instagram/controllers/home_controller.dart';
-import 'package:instagram/profile_screen.dart';
-import 'package:instagram/stories.dart';
+import 'package:instagram/ui/main/bottombar/bottom_nav_bar.dart';
+import 'package:instagram/ui/main/profile_page/profile_screen.dart';
+
+import 'ui/startup/Auth/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

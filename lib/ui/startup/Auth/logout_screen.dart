@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:instagram/Auth/login_screen.dart';
 import 'package:instagram/controllers/home_controller.dart';
-import 'package:instagram/saved_posts.dart';
+import 'package:instagram/ui/main/save_post/saved_posts.dart';
 
-class SettingScreen extends StatefulWidget {
-  const SettingScreen({super.key});
+import 'login_screen.dart';
+
+class LogoutScreen extends StatefulWidget {
+  const LogoutScreen({super.key});
 
   @override
-  State<SettingScreen> createState() => _SettingScreenState();
+  State<LogoutScreen> createState() => _LogoutScreenState();
 }
 
-class _SettingScreenState extends State<SettingScreen> {
+class _LogoutScreenState extends State<LogoutScreen> {
   final HomeController controller = Get.find();
   GetStorage box = GetStorage();
 
