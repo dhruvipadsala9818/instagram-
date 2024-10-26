@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:video_player/video_player.dart';
-
-import '../../../controllers/search_controller.dart';
+import 'package:instagram/constant/app_string.dart';
+import 'package:instagram/controllers/search_controller.dart';
+import 'package:instagram/ui/main/search_page/video_player.dart';
 
 class SearchScreen extends StatelessWidget {
   final SearchScreenController searchController =
@@ -23,24 +23,6 @@ class SearchScreen extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(12),
-              // child: TextField(
-              //   controller: searchFieldController,
-              //   focusNode: _focusNode,
-              //   decoration: InputDecoration(
-              //     prefixIcon: Icon(Icons.search),
-              //     hintText: 'Search',
-              //     border: OutlineInputBorder(
-              //       borderSide: BorderSide(color: Colors.black),
-              //       borderRadius: BorderRadius.circular(30),
-              //     ),
-              //   ),
-              //   onChanged: (value) {
-              //     searchController.searchUsers(value);
-              //   },
-              //   onTap: () {
-              //     searchController.showSearchResults(true);
-              //   },
-              // ),
               child: Container(
                 height: 42,
                 padding: EdgeInsets.symmetric(horizontal: 10),
@@ -55,7 +37,7 @@ class SearchScreen extends StatelessWidget {
                     prefixIcon: Icon(
                       Icons.search,
                     ),
-                    hintText: 'Search',
+                    hintText: AppString.search,
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(vertical: 12),
                   ),
@@ -72,7 +54,7 @@ class SearchScreen extends StatelessWidget {
               () {
                 if (searchController.searchResults.isEmpty &&
                     searchFieldController.text.isNotEmpty) {
-                  return const Center(child: Text('No users found'));
+                  return const Center(child: Text(AppString.noUsersFound));
                 } else if (searchFieldController.text.isNotEmpty) {
                   return ListView.builder(
                     shrinkWrap: true,
@@ -161,45 +143,5 @@ class SearchScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class VideoPlayerWidget extends StatefulWidget {
-  final String videoUrl;
-
-  const VideoPlayerWidget({required this.videoUrl});
-
-  @override
-  _VideoPlayerWidgetState createState() => _VideoPlayerWidgetState();
-}
-
-class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
-  late VideoPlayerController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = VideoPlayerController.network(widget.videoUrl)
-      ..initialize().then((_) {
-        setState(() {});
-        _controller.play();
-        _controller.setLooping(true);
-      });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _controller.value.isInitialized
-        ? AspectRatio(
-            aspectRatio: _controller.value.aspectRatio,
-            child: VideoPlayer(_controller),
-          )
-        : const SizedBox.shrink();
   }
 }

@@ -1,16 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:instagram/constant/app_string.dart';
+import 'package:instagram/controllers/post_controller.dart';
+import 'package:instagram/controllers/search_controller.dart';
 import 'package:instagram/ui/main/reels_page/reels_screen.dart';
 import 'package:instagram/ui/startup/Auth/logout_screen.dart';
 import 'package:provider/provider.dart';
 import 'Edit_profile.dart';
-import '../../../controllers/post_controller.dart';
-import '../../../controllers/search_controller.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -47,6 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+
     final SearchScreenController searchController =
         Get.put(SearchScreenController());
 
@@ -79,23 +79,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               Row(
                                 children: [
-                                  Icon(Icons.lock_outline, size: 17),
+                                  Icon(Icons.lock_outline,
+                                      size: screenWidth * 0.045),
                                   Text(' $email',
-                                      style: TextStyle(fontSize: 20)),
-                                  SizedBox(width: 5),
+                                      style: TextStyle(
+                                          fontSize: screenWidth * 0.05)),
+                                  SizedBox(width: screenWidth * 0.02),
                                   Icon(Icons.keyboard_arrow_down_sharp,
-                                      size: 17),
+                                      size: screenWidth * 0.045),
                                   Spacer(),
                                   GestureDetector(
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => LogoutScreen(),
-                                        ),
-                                      );
+                                      Get.to(LogoutScreen());
                                     },
-                                    child: Icon(Icons.menu, size: 18),
+                                    child: Icon(Icons.menu,
+                                        size: screenWidth * 0.075),
                                   ),
                                 ],
                               ),
@@ -110,15 +108,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           imageUrl: profileImageUrl ?? '',
                                           placeholder: (context, url) =>
                                               Container(
-                                            width: screenWidth *
-                                                0.26, // Circle diameter
+                                            width: screenWidth * 0.26,
                                             height: screenWidth * 0.26,
                                             color: Colors.grey[200],
                                             child: Center(
                                               child: Icon(
                                                 Icons.camera_alt_outlined,
                                                 color: Colors.white,
-                                                size: 40,
+                                                size: screenWidth * 0.1,
                                               ),
                                             ),
                                           ),
@@ -127,9 +124,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             width: screenWidth * 0.26,
                                             height: screenWidth * 0.26,
                                             color: Colors.grey[200],
-                                            child: Icon(Icons.person,
-                                                size: screenWidth *
-                                                    0.08), // Placeholder icon
+                                            child: Icon(
+                                              Icons.person,
+                                              size: screenWidth * 0.08,
+                                            ),
                                           ),
                                           width: screenWidth * 0.26,
                                           height: screenWidth * 0.26,
@@ -137,11 +135,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                       ),
                                       Positioned(
-                                        right: 1,
-                                        bottom: 6,
+                                        right: screenWidth * 0.02,
+                                        bottom: screenHeight * 0.007,
                                         child: Container(
-                                          height: 25,
-                                          width: 25,
+                                          height: screenHeight * 0.03,
+                                          width: screenWidth * 0.07,
                                           decoration: BoxDecoration(
                                             color: Colors.blue,
                                             shape: BoxShape.circle,
@@ -149,15 +147,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 color: Colors.white, width: 2),
                                           ),
                                           child: Icon(Icons.add,
-                                              color: Colors.white, size: 16),
+                                              color: Colors.white,
+                                              size: screenWidth * 0.04),
                                         ),
                                       ),
                                       Positioned(
-                                        left: 19,
-                                        top: -20,
+                                        left: screenWidth * 0.05,
+                                        top: -screenHeight * 0.03,
                                         child: Container(
-                                          height: 40,
-                                          width: 65,
+                                          height: screenHeight * 0.06,
+                                          width: screenWidth * 0.18,
                                           decoration: BoxDecoration(
                                               color: Colors.grey,
                                               borderRadius:
@@ -167,15 +166,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                'current',
+                                                AppString.current,
                                                 style: TextStyle(
                                                   color: Colors.white,
+                                                  fontSize: screenWidth * 0.03,
                                                 ),
                                               ),
                                               Text(
-                                                'vibe?',
+                                                AppString.vibe,
                                                 style: TextStyle(
                                                   color: Colors.white,
+                                                  fontSize: screenWidth * 0.03,
                                                 ),
                                               ),
                                             ],
@@ -185,23 +186,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ],
                                   ),
                                   Spacer(),
-                                  Column(children: [
-                                    Text('${userController.posts.length}'),
-                                    Text('posts')
-                                  ]),
+                                  Column(
+                                    children: [
+                                      Text('${userController.posts.length}',
+                                          style: TextStyle(
+                                              fontSize: screenWidth * 0.04,
+                                              fontWeight: FontWeight.bold)),
+                                      Text(AppString.posts,
+                                          style: TextStyle(
+                                              fontSize: screenWidth * 0.035)),
+                                    ],
+                                  ),
                                   Spacer(),
                                   Column(
                                     children: [
-                                      //Text('0'),
                                       Obx(() {
                                         int followersCount =
                                             searchController.followers.length;
                                         return Text(
                                           '$followersCount',
+                                          style: TextStyle(
+                                              fontSize: screenWidth * 0.04,
+                                              fontWeight: FontWeight.bold),
                                         );
                                       }),
-
-                                      Text('followers'),
+                                      Text(AppString.follower,
+                                          style: TextStyle(
+                                              fontSize: screenWidth * 0.035)),
                                     ],
                                   ),
                                   Spacer(),
@@ -213,11 +224,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               .followingUsers.length;
                                           return Text(
                                             '$followingCount',
+                                            style: TextStyle(
+                                                fontSize: screenWidth * 0.04,
+                                                fontWeight: FontWeight.bold),
                                           );
                                         },
                                       ),
-                                      // Text("0"),
-                                      Text('following'),
+                                      Text(AppString.following,
+                                          style: TextStyle(
+                                              fontSize: screenWidth * 0.035)),
                                     ],
                                   ),
                                 ],
@@ -225,7 +240,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               SizedBox(height: screenHeight * 0.01),
                               Text('$username',
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: screenWidth * 0.045,
                                       fontWeight: FontWeight.bold)),
                               SizedBox(height: screenHeight * 0.02),
                               Row(
@@ -234,26 +249,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                EditProfileScreen(),
-                                          ));
+                                      Get.to(EditProfileScreen());
                                     },
                                     child: Container(
-                                      height: 35,
-                                      width: 130,
+                                      height: screenHeight * 0.05,
+                                      width: screenWidth * 0.35,
                                       decoration: BoxDecoration(
                                         color: Colors.grey.shade300,
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: Center(
                                         child: Text(
-                                          'Edit Profile',
+                                          AppString.editProfile,
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
-                                              fontSize: 15),
+                                              fontSize: screenWidth * 0.04),
                                         ),
                                       ),
                                     ),
@@ -261,18 +271,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   GestureDetector(
                                     onTap: () {},
                                     child: Container(
-                                      height: 35,
-                                      width: 130,
+                                      height: screenHeight * 0.05,
+                                      width: screenWidth * 0.35,
                                       decoration: BoxDecoration(
                                         color: Colors.grey.shade300,
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: Center(
                                         child: Text(
-                                          'Share Profile',
+                                          AppString.shareProfile,
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
-                                              fontSize: 15),
+                                              fontSize: screenWidth * 0.04),
                                         ),
                                       ),
                                     ),
@@ -280,28 +290,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   GestureDetector(
                                     onTap: () {},
                                     child: Container(
-                                      height: 35,
-                                      width: 40,
+                                      height: screenHeight * 0.05,
+                                      width: screenWidth * 0.12,
                                       decoration: BoxDecoration(
                                         color: Colors.grey.shade300,
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: Center(
-                                        child: Icon(Icons.person_outlined),
+                                        child: Icon(Icons.person_outlined,
+                                            size: screenWidth * 0.06),
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.03,
-                              ),
+                              SizedBox(height: screenHeight * 0.03),
                               Column(
                                 children: [
                                   Container(
-                                    height: 60,
-                                    width: 60,
+                                    height: screenHeight * 0.08,
+                                    width: screenHeight * 0.08,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       border: Border.all(
@@ -309,10 +317,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                     child: Icon(
                                       Icons.add,
-                                      size: 28,
+                                      size: screenWidth * 0.07,
                                     ),
                                   ),
-                                  Text('New'),
+                                  Text('New',
+                                      style: TextStyle(
+                                          fontSize: screenWidth * 0.04)),
                                 ],
                               ),
                             ],
@@ -325,16 +335,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               TabBar(
                                 indicatorColor: Colors.blue,
                                 indicatorSize: TabBarIndicatorSize.tab,
-                                dividerColor: Colors.transparent,
                                 labelColor: Colors.blue,
+                                dividerColor: Colors.transparent,
                                 tabs: [
-                                  Tab(icon: Icon(Icons.grid_on)),
-                                  Tab(icon: Icon(Icons.video_collection)),
-                                  Tab(icon: Icon(Icons.person_pin)),
+                                  Tab(
+                                      icon: Icon(Icons.grid_on_outlined,
+                                          size: screenWidth * 0.06)),
+                                  Tab(
+                                      icon: Icon(Icons.video_collection,
+                                          size: screenWidth * 0.06)),
+                                  Tab(
+                                      icon: Icon(Icons.person_pin,
+                                          size: screenWidth * 0.06)),
                                 ],
                               ),
                               SizedBox(
-                                height: 300,
+                                height: screenHeight * 0.4,
                                 child: TabBarView(
                                   children: [
                                     // Posts Tab
@@ -342,8 +358,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       gridDelegate:
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 3,
-                                        crossAxisSpacing: 4.0,
-                                        mainAxisSpacing: 4.0,
+                                        crossAxisSpacing: screenWidth * 0.01,
+                                        mainAxisSpacing: screenWidth * 0.01,
                                       ),
                                       itemCount: userController.posts.length,
                                       itemBuilder: (context, index) {
@@ -361,13 +377,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       },
                                     ),
 
-                                    // Reels Tab
+                                    // Reels
                                     GridView.builder(
                                       gridDelegate:
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 3,
-                                        mainAxisSpacing: 4.0,
-                                        crossAxisSpacing: 4.0,
+                                        mainAxisSpacing: screenWidth * 0.01,
+                                        crossAxisSpacing: screenWidth * 0.01,
                                         childAspectRatio: 0.65,
                                       ),
                                       itemCount: userController.reels.length,
@@ -387,12 +403,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                           reel['mediaUrl']),
                                                 ),
                                                 Positioned(
-                                                  bottom: 10,
-                                                  // right: 10,
+                                                  bottom: screenHeight * 0.01,
                                                   child: Icon(
                                                     Icons.play_arrow_outlined,
                                                     color: Colors.white,
-                                                    size: 25,
+                                                    size: screenWidth * 0.06,
                                                   ),
                                                 ),
                                               ],
@@ -401,7 +416,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         );
                                       },
                                     ),
+
                                     // Tagged Tab
+
                                     Center(child: Text('Tagged content here')),
                                   ],
                                 ),

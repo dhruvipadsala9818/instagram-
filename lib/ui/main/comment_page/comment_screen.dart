@@ -1,269 +1,30 @@
-// import 'package:cached_network_image/cached_network_image.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:flutter/material.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:get/get.dart';
-// import 'package:get/get_core/src/get_main.dart';
-//
-// import 'bottom_nav_bar.dart';
-// import 'controllers/home_controller.dart';
-//
-// class CommentScreen extends StatefulWidget {
-//   final HomeController controller = Get.find();
-//
-//   final String postId;
-//
-//   CommentScreen({required this.postId});
-//
-//   @override
-//   _CommentScreenState createState() => _CommentScreenState();
-// }
-//
-// class _CommentScreenState extends State<CommentScreen> {
-//   final TextEditingController _controller = TextEditingController();
-//   List<QueryDocumentSnapshot> comments = [];
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     _loadComments();
-//   }
-//
-//   void _loadComments() {
-//     FirebaseFirestore.instance
-//         .collection('posts')
-//         .doc(widget.postId)
-//         .collection('comments')
-//         .orderBy('timestamp', descending: true)
-//         .snapshots()
-//         .listen((snapshot) {
-//       setState(() {
-//         comments = snapshot.docs;
-//       });
-//     });
-//   }
-//
-//   void _addComment() async {
-//     if (_controller.text.isNotEmpty) {
-//       User? currentUser = FirebaseAuth.instance.currentUser;
-//
-//       if (currentUser != null) {
-//         String userId = currentUser.uid;
-//
-//         DocumentSnapshot userDoc = await FirebaseFirestore.instance
-//             .collection('InstaUser')
-//             .doc(userId)
-//             .get();
-//
-//         if (userDoc.exists) {
-//           Map<String, dynamic>? userData =
-//               userDoc.data() as Map<String, dynamic>?;
-//
-//           print('User Data: $userData');
-//
-//           String username = userData?['username'] ?? 'Unknown User';
-//           String profileImageUrl =
-//               userData?['imageUrl'] ?? 'https://via.placeholder.com/150';
-//
-//           await FirebaseFirestore.instance
-//               .collection('posts')
-//               .doc(widget.postId)
-//               .collection('comments')
-//               .add({
-//             'comment': _controller.text,
-//             'username': username,
-//             'profileImageUrl': profileImageUrl,
-//             'userId': userId,
-//             'timestamp': FieldValue.serverTimestamp(),
-//           });
-//
-//           _controller.clear();
-//         } else {
-//           print('User document does not exist.');
-//         }
-//       } else {
-//         print('No user is currently logged in.');
-//       }
-//     }
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('comments'),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(5),
-//         child: Column(
-//           children: [
-//             Expanded(
-//               child: comments.isEmpty
-//                   ? Center(child: Text('No comments yet.'))
-//                   : ListView.builder(
-//                       itemCount: comments.length,
-//                       itemBuilder: (context, index) {
-//                         return ListTile(
-//                           leading: CircleAvatar(
-//                             backgroundImage: NetworkImage(
-//                               (comments[index].data() as Map<String, dynamic>)
-//                                       .containsKey('profileImageUrl')
-//                                   ? comments[index][
-//                                       'profileImageUrl'] // Change to 'profileImageUrl'
-//                                   : 'https://via.placeholder.com/150',
-//                             ),
-//                           ),
-//                           title: Text(
-//                             (comments[index].data() as Map<String, dynamic>)
-//                                     .containsKey('username')
-//                                 ? comments[index]['username']
-//                                 : 'Unknown User',
-//                           ),
-//                           subtitle: Text(comments[index]['comment']),
-//                         );
-//                       },
-//                     ),
-//             ),
-//             Row(
-//               children: [
-//                 Container(
-//                   height: 50,
-//                   width: 50,
-//                   child: CachedNetworkImage(
-//                     imageUrl: controller.userProfileImageUrl.value.isNotEmpty
-//                         ? controller.userProfileImageUrl.value
-//                         : 'https://via.placeholder.com/150',
-//                     imageBuilder: (context, imageProvider) => Container(
-//                       decoration: BoxDecoration(
-//                         shape: BoxShape.circle,
-//                         image: DecorationImage(
-//                           image: imageProvider,
-//                           fit: BoxFit.cover,
-//                         ),
-//                       ),
-//                     ),
-//                     placeholder: (context, url) =>
-//                         const CircularProgressIndicator(),
-//                     errorWidget: (context, url, error) =>
-//                         const Icon(Icons.error),
-//                   ),
-//                 ),
-//                 SizedBox(
-//                   width: 10,
-//                 ),
-//                 Expanded(
-//                   child: Container(
-//                     height: 50,
-//                     decoration: BoxDecoration(
-//                         border: Border.all(color: Colors.grey),
-//                         borderRadius: BorderRadius.circular(30)),
-//                     child: TextField(
-//                       controller: _controller,
-//                       decoration: InputDecoration(
-//                         hintText: 'Type your comment...',
-//                         border: OutlineInputBorder(
-//                           borderSide: BorderSide.none,
-//                         ),
-//                         suffixIcon: IconButton(
-//                           icon: Icon(Icons.send),
-//                           onPressed: _addComment,
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:instagram/constant/app_string.dart';
+import 'package:instagram/controllers/comment_controller.dart';
 import '../bottombar/bottom_nav_bar.dart';
-import '../../../controllers/home_controller.dart';
 
-class CommentScreen extends StatefulWidget {
-  final HomeController controller = Get.find();
+class CommentScreen extends StatelessWidget {
   final String postId;
+  final CommentController controller = Get.put(CommentController());
 
   CommentScreen({required this.postId});
 
   @override
-  _CommentScreenState createState() => _CommentScreenState();
-}
-
-class _CommentScreenState extends State<CommentScreen> {
-  final TextEditingController _controller = TextEditingController();
-  List<QueryDocumentSnapshot> comments = [];
-
-  @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showBottomSheet();
+      _showBottomSheet(context);
     });
+
+    return Scaffold(
+      body: BottomNavBar(),
+      resizeToAvoidBottomInset: true,
+    );
   }
 
-  Future<void> _loadComments() async {
-    final snapshot = await FirebaseFirestore.instance
-        .collection('posts')
-        .doc(widget.postId)
-        .collection('comments')
-        .orderBy('timestamp', descending: true)
-        .get();
-
-    setState(() {
-      comments = snapshot.docs;
-    });
-  }
-
-  void _addComment() async {
-    if (_controller.text.isNotEmpty) {
-      User? currentUser = FirebaseAuth.instance.currentUser;
-
-      if (currentUser != null) {
-        String userId = currentUser.uid;
-
-        DocumentSnapshot userDoc = await FirebaseFirestore.instance
-            .collection('InstaUser')
-            .doc(userId)
-            .get();
-
-        if (userDoc.exists) {
-          Map<String, dynamic>? userData =
-              userDoc.data() as Map<String, dynamic>?;
-
-          String username = userData?['username'] ?? 'Unknown User';
-          String profileImageUrl =
-              userData?['imageUrl'] ?? 'https://via.placeholder.com/150';
-
-          await FirebaseFirestore.instance
-              .collection('posts')
-              .doc(widget.postId)
-              .collection('comments')
-              .add({
-            'comment': _controller.text,
-            'username': username,
-            'profileImageUrl': profileImageUrl,
-            'userId': userId,
-            'timestamp': FieldValue.serverTimestamp(),
-          });
-
-          _controller.clear();
-          _loadComments();
-        }
-      }
-    }
-  }
-
-  void _showBottomSheet() async {
-    await _loadComments();
+  void _showBottomSheet(BuildContext context) async {
+    controller.loadComments(postId);
 
     showModalBottomSheet(
       context: context,
@@ -276,23 +37,12 @@ class _CommentScreenState extends State<CommentScreen> {
         expand: false,
         builder: (context, scrollController) {
           return BottomCommentSheet(
-            postId: widget.postId,
+            postId: postId,
             scrollController: scrollController,
-            comments: comments,
-            addComment: _addComment,
-            textController: _controller,
-            controller: widget.controller,
+            controller: controller,
           );
         },
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: BottomNavBar(),
-      resizeToAvoidBottomInset: true,
     );
   }
 }
@@ -300,17 +50,11 @@ class _CommentScreenState extends State<CommentScreen> {
 class BottomCommentSheet extends StatelessWidget {
   final String postId;
   final ScrollController scrollController;
-  final List<QueryDocumentSnapshot> comments;
-  final VoidCallback addComment;
-  final TextEditingController textController;
-  final HomeController controller;
+  final CommentController controller;
 
   BottomCommentSheet({
     required this.postId,
     required this.scrollController,
-    required this.comments,
-    required this.addComment,
-    required this.textController,
     required this.controller,
   });
 
@@ -335,37 +79,39 @@ class BottomCommentSheet extends StatelessWidget {
           const SizedBox(height: 10),
 
           Expanded(
-            child: comments.isNotEmpty
-                ? SingleChildScrollView(
-                    controller: scrollController,
-                    child: ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: comments.length,
-                      itemBuilder: (context, index) {
-                        var commentData =
-                            comments[index].data() as Map<String, dynamic>;
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                              commentData.containsKey('profileImageUrl')
-                                  ? commentData['profileImageUrl']
-                                  : 'https://via.placeholder.com/150',
+            child: Obx(
+              () => controller.comments.isNotEmpty
+                  ? SingleChildScrollView(
+                      controller: scrollController,
+                      child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: controller.comments.length,
+                        itemBuilder: (context, index) {
+                          var commentData = controller.comments[index].data()
+                              as Map<String, dynamic>;
+                          return ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                commentData.containsKey('profileImageUrl')
+                                    ? commentData['profileImageUrl']
+                                    : 'https://via.placeholder.com/150',
+                              ),
                             ),
-                          ),
-                          title: Text(
-                            commentData.containsKey('username')
-                                ? commentData['username']
-                                : 'Unknown User',
-                          ),
-                          subtitle: Text(commentData['comment']),
-                        );
-                      },
+                            title: Text(
+                              commentData.containsKey('username')
+                                  ? commentData['username']
+                                  : 'Unknown User',
+                            ),
+                            subtitle: Text(commentData['comment']),
+                          );
+                        },
+                      ),
+                    )
+                  : Center(
+                      child: Text('No comments yet, be the first!'),
                     ),
-                  )
-                : Center(
-                    child: Text('No comments yet, be the first!'),
-                  ),
+            ),
           ),
           const SizedBox(height: 10),
 
@@ -379,23 +125,25 @@ class BottomCommentSheet extends StatelessWidget {
                   height: 40,
                   width: 40,
                   margin: const EdgeInsets.only(left: 8),
-                  child: CachedNetworkImage(
-                    imageUrl: controller.userProfileImageUrl.value.isNotEmpty
-                        ? controller.userProfileImageUrl.value
-                        : 'https://via.placeholder.com/150',
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
+                  child: Obx(
+                    () => CachedNetworkImage(
+                      imageUrl: controller.userProfileImageUrl.value.isNotEmpty
+                          ? controller.userProfileImageUrl.value
+                          : 'https://via.placeholder.com/150',
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                     ),
-                    placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -407,14 +155,13 @@ class BottomCommentSheet extends StatelessWidget {
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: TextField(
-                      controller: textController,
+                      controller: controller.commentTextController,
                       decoration: InputDecoration(
-                        hintText: 'Type your comment...',
+                        hintText: AppString.typeYourComment,
                         border: InputBorder.none,
                       ),
                       onSubmitted: (_) {
-                        addComment();
-                        // textController.clear();
+                        controller.addComment(postId);
                       },
                     ),
                   ),
@@ -422,7 +169,7 @@ class BottomCommentSheet extends StatelessWidget {
                 IconButton(
                   icon: Icon(Icons.send),
                   onPressed: () {
-                    addComment();
+                    controller.addComment(postId);
                   },
                 ),
               ],

@@ -59,11 +59,9 @@ class HomeController extends GetxController {
         .get();
 
     if (commentSnapshot.docs.isNotEmpty) {
-      // Assign the comment data to the map
       comments[postId] =
           commentSnapshot.docs.first.data() as Map<String, dynamic>;
     } else {
-      // Assign an empty map if no comment is found
       comments[postId] = {};
     }
   }
@@ -174,7 +172,6 @@ class HomeController extends GetxController {
               updateFavoritesList();
               updateBookmarksList();
 
-              // Fetch last comments for each post
               for (var post in posts) {
                 fetchLastComment(post['uid']);
               }

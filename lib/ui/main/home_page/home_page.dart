@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:story_view/controller/story_controller.dart';
-import 'package:story_view/widgets/story_view.dart';
-
-import '../comment_page/comment_screen.dart';
-import '../../../controllers/home_controller.dart';
+import 'package:instagram/constant/app_assets.dart';
+import 'package:instagram/constant/app_string.dart';
+import 'package:instagram/controllers/home_controller.dart';
+import 'package:instagram/ui/main/comment_page/comment_screen.dart';
+import 'package:instagram/ui/main/home_page/view_story.dart';
 
 class HomePage extends StatelessWidget {
   final HomeController controller = Get.put(HomeController());
@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
                 child: Row(
                   children: [
                     Image.asset(
-                      'assets/images/insta-text.png',
+                      AppAssets.instagramText,
                       scale: 3.5,
                     ),
                     const Icon(Icons.keyboard_arrow_down_outlined),
@@ -48,9 +48,7 @@ class HomePage extends StatelessWidget {
                     Obx(() {
                       return ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: 1 +
-                            controller.followedUserStories
-                                .length, // User's story + followed users' stories
+                        itemCount: 1 + controller.followedUserStories.length,
                         itemBuilder: (context, index) {
                           if (index == 0) {
                             return Column(
@@ -100,12 +98,12 @@ class HomePage extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 5,
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8),
-                                  child: Text('Your story'),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 8),
+                                  child: Text(AppString.yourStory),
                                 ),
                               ],
                             );
@@ -152,7 +150,7 @@ class HomePage extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 5,
                                 ),
                                 Padding(
@@ -171,7 +169,7 @@ class HomePage extends StatelessWidget {
                       left: 73,
                       child: GestureDetector(
                         onTap: () {
-                          controller.pickImage(); // Allow user to pick image
+                          controller.pickImage();
                         },
                         child: Container(
                           height: height * 0.025,
@@ -255,10 +253,7 @@ class HomePage extends StatelessWidget {
                               ],
                             ),
                           ),
-
                           SizedBox(height: height * 0.01),
-
-                          // Post Image
                           Container(
                             height: height * 0.36,
                             width: double.infinity,
@@ -269,9 +264,7 @@ class HomePage extends StatelessWidget {
                               ),
                             ),
                           ),
-
                           SizedBox(height: height * 0.01),
-
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: Row(
@@ -351,7 +344,6 @@ class HomePage extends StatelessWidget {
                               ],
                             ),
                           ),
-
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 5),
@@ -363,7 +355,7 @@ class HomePage extends StatelessWidget {
                                     ),
                                   )
                                 : Text(
-                                    'No comments yet',
+                                    AppString.noCommentsYet,
                                     style: TextStyle(
                                       color: Colors.grey[600],
                                     ),
@@ -378,45 +370,6 @@ class HomePage extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class ViewStory extends StatefulWidget {
-  final List storyUrls;
-
-  ViewStory(this.storyUrls);
-
-  @override
-  _ViewStoryState createState() => _ViewStoryState();
-}
-
-class _ViewStoryState extends State<ViewStory> {
-  final StoryController storyController = StoryController();
-
-  @override
-  void dispose() {
-    storyController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: StoryView(
-        storyItems: widget.storyUrls.map((url) {
-          return StoryItem.pageImage(
-            url: url,
-            controller: storyController,
-          );
-        }).toList(),
-        onComplete: () {
-          Navigator.pop(context);
-        },
-        progressPosition: ProgressPosition.top,
-        repeat: false,
-        controller: storyController,
       ),
     );
   }

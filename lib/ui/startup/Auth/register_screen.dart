@@ -1,13 +1,13 @@
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:instagram/constant/app_assets.dart';
+import 'package:instagram/constant/app_string.dart';
+import 'package:instagram/helper/helper.dart';
 import 'package:instagram/ui/main/bottombar/bottom_nav_bar.dart';
 import 'package:instagram/controllers/home_controller.dart';
-
+import 'package:instagram/widgets/common_text_field.dart';
 import 'login_screen.dart';
 
 class RegistrationScreen extends StatelessWidget {
@@ -45,14 +45,8 @@ class RegistrationScreen extends StatelessWidget {
             'bio': '',
           });
 
-          Fluttertoast.showToast(
-            msg: 'Registration successful',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.black,
-            textColor: Colors.white,
-            fontSize: 16.0,
-          );
+          Helper.dialogCall.showToast(
+              context, AppString.registerSuccess, Colors.black, Colors.white);
 
           HomeController homeController = Get.put(HomeController());
           await homeController.fetchProfile();
@@ -65,14 +59,8 @@ class RegistrationScreen extends StatelessWidget {
           );
         }
       } catch (e) {
-        Fluttertoast.showToast(
-          msg: 'Error: $e',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.black,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
+        Helper.dialogCall.showToast(context,
+            '${AppString.error} ${e.toString()}', Colors.black, Colors.white);
       }
     }
   }
@@ -82,6 +70,9 @@ class RegistrationScreen extends StatelessWidget {
     final screenSize = MediaQuery.of(context).size;
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
+    final mediaQuery = MediaQuery.of(context);
+    final screenWidth = mediaQuery.size.width;
+    final screenHeight = mediaQuery.size.height;
 
     return SafeArea(
       child: Scaffold(
@@ -101,13 +92,13 @@ class RegistrationScreen extends StatelessWidget {
                   ),
                   Center(
                     child: Image.asset(
-                      'assets/images/instagram.png',
+                      AppAssets.instagram,
                       scale: isPortrait ? 8 : 12,
                     ),
                   ),
                   SizedBox(height: screenSize.height * 0.02),
                   Text(
-                    'Create an account',
+                    AppString.createAcc,
                     style: TextStyle(
                       fontSize: screenSize.width * 0.07,
                       fontWeight: FontWeight.bold,
@@ -115,67 +106,63 @@ class RegistrationScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: screenSize.height * 0.02),
-                  TextFormField(
+                  CustomTextField(
                     controller: _emailController,
-                    decoration: InputDecoration(
-                      hintText: "Email",
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(screenSize.width * 0.03),
-                      ),
-                    ),
+                    hintText: AppString.email,
+                    keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter an email';
+                        return AppString.pleaseEnterEmail;
                       }
                       if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                        return 'Please enter a valid email';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: screenSize.height * 0.01),
-                  TextFormField(
-                    controller: _usernameController,
-                    decoration: InputDecoration(
-                      hintText: "Username",
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(screenSize.width * 0.03),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a username';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: screenSize.height * 0.01),
-                  TextFormField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      hintText: "Password",
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(screenSize.width * 0.03),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a password';
-                      }
-                      if (value.length < 6) {
-                        return 'Password must be at least 6 characters';
+                        return AppString.pleaseEnterValidEmail;
                       }
                       return null;
                     },
                   ),
                   SizedBox(height: screenSize.height * 0.02),
-                  ElevatedButton(
+                  CustomTextField(
+                    controller: _usernameController,
+                    hintText: AppString.username,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return AppString.pleaseEnterUsername;
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: screenSize.height * 0.02),
+                  CustomTextField(
+                    controller: _passwordController,
+                    hintText: AppString.password,
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return AppString.pleaseEnterPassword;
+                      }
+                      if (value.length < 6) {
+                        return AppString.passwordCharacter;
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: screenSize.height * 0.02),
+                  MaterialButton(
+                    height: screenHeight * 0.06,
+                    minWidth: double.infinity,
+                    color: Colors.lightBlue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      side: BorderSide.none,
+                    ),
                     onPressed: () => _registerUser(context),
-                    child: Text('Register'),
+                    child: Text(
+                      AppString.register,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: screenWidth * 0.05,
+                      ),
+                    ),
                   ),
                   SizedBox(height: screenSize.height * 0.02),
                   TextButton(
@@ -187,7 +174,10 @@ class RegistrationScreen extends StatelessWidget {
                         ),
                       );
                     },
-                    child: Text('Already have an account? Login here!'),
+                    child: const Text(
+                      AppString.alreadyHaveAcc,
+                      style: TextStyle(color: Colors.blue),
+                    ),
                   ),
                 ],
               ),

@@ -48,9 +48,8 @@ class ReelsScreen extends StatelessWidget {
             return const Center(child: Text('No videos found.'));
           }
 
-          // Use a PageView for vertical scrolling between videos
           return PageView.builder(
-            scrollDirection: Axis.vertical, // Vertical swipe direction
+            scrollDirection: Axis.vertical,
             itemCount: controller.videoUrls.length,
             itemBuilder: (context, index) {
               return VideoPlayerWidget(videoUrl: controller.videoUrls[index]);

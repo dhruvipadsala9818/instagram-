@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:instagram/constant/app_string.dart';
 import 'package:instagram/controllers/home_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -12,7 +13,7 @@ class SavedPostsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Saved Posts'),
+        title: const Text(AppString.savePost),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -24,7 +25,7 @@ class SavedPostsPage extends StatelessWidget {
         () {
           if (controller.userBookmarks.isEmpty) {
             return const Center(
-              child: Text('No saved posts yet'),
+              child: Text(AppString.noSavePostYet),
             );
           }
 

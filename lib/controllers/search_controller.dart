@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:instagram/constant/app_string.dart';
 
 class SearchScreenController extends GetxController {
   var searchResults = <Map<String, dynamic>>[].obs;
@@ -66,7 +67,7 @@ class SearchScreenController extends GetxController {
             .get();
 
         if (!currentUserDoc.exists || !targetUserDoc.exists) {
-          print("User document does not exist");
+          print('User document does not exist');
           return;
         }
 
@@ -138,16 +139,14 @@ class SearchScreenController extends GetxController {
     }
   }
 
-  // Fetch both posts and reels from Firestore
   void fetchAllPostsAndReels() {
     isLoading(true);
 
-    // Fetch both posts and reels and combine them in one list
     FirebaseFirestore.instance.collectionGroup('posts').snapshots().listen(
       (snapshot) {
         List<Map<String, dynamic>> allPosts = snapshot.docs.map((doc) {
           return {
-            'type': 'image', // Define as post type
+            'type': 'image',
             'mediaUrl': doc['mediaUrl'] ?? '',
           };
         }).toList();
@@ -156,7 +155,7 @@ class SearchScreenController extends GetxController {
           (snapshot) {
             List<Map<String, dynamic>> allReels = snapshot.docs.map((doc) {
               return {
-                'type': 'video', // Define as reel type
+                'type': 'video',
                 'mediaUrl': doc['mediaUrl'] ?? '',
               };
             }).toList();

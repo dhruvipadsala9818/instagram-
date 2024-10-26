@@ -1,22 +1,21 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../../controllers/edit_profile_controller.dart';
+import 'package:instagram/constant/app_string.dart';
+import 'package:instagram/controllers/edit_profile_controller.dart';
+import 'package:instagram/widgets/common_text_field.dart';
 
 class EditProfileScreen extends StatelessWidget {
   final EditProfileController _controller = Get.put(EditProfileController());
 
   @override
   Widget build(BuildContext context) {
-    // MediaQuery to get screen size
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Edit Profile'),
+          title: const Text(AppString.editProfile),
           actions: [
             IconButton(
               icon: const Icon(Icons.check),
@@ -28,20 +27,17 @@ class EditProfileScreen extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: width * 0.04), // Dynamic padding
+                padding: EdgeInsets.symmetric(horizontal: width * 0.04),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Profile picture section
                     Center(
                       child: GestureDetector(
                         onTap: _controller.pickImage,
                         child: Obx(() {
                           return Container(
-                            height: height * 0.15, // 15% of screen height
-                            width: height *
-                                0.15, // 15% of screen height for the circular profile image
+                            height: height * 0.15,
+                            width: height * 0.15,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: Colors.grey,
@@ -63,112 +59,70 @@ class EditProfileScreen extends StatelessWidget {
                         }),
                       ),
                     ),
-                    SizedBox(height: height * 0.02), // Dynamic spacing
-                    const Center(
+                    SizedBox(height: height * 0.02),
+                    Center(
                       child: Text(
-                        "Edit Picture or Avatar",
+                        AppString.editPicture,
                         style: TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.w500,
-                          fontSize: 15,
+                          fontSize: width * 0.04,
                         ),
                       ),
                     ),
-                    SizedBox(height: height * 0.04), // Dynamic spacing
-
-                    // Username TextField
-                    TextField(
+                    SizedBox(height: height * 0.04),
+                    CommonTextField(
                       controller: _controller.usernameController,
-                      decoration: InputDecoration(
-                        labelText: "Username",
-                        labelStyle: TextStyle(
-                          color: Colors.grey.shade400,
-                          fontSize: width * 0.04, // Dynamic font size
-                        ),
-                      ),
+                      labelText: AppString.username,
                     ),
-                    SizedBox(height: height * 0.015), // Dynamic spacing
-
-                    // Email TextField
-                    TextField(
+                    SizedBox(height: height * 0.015),
+                    CommonTextField(
                       controller: _controller.emailController,
-                      decoration: InputDecoration(
-                        labelText: "Email",
-                        labelStyle: TextStyle(
-                          color: Colors.grey.shade400,
-                          fontSize: width * 0.04, // Dynamic font size
-                        ),
-                      ),
+                      labelText: AppString.email,
                     ),
-                    SizedBox(height: height * 0.015), // Dynamic spacing
-
-                    // Pronouns TextField
-                    TextField(
+                    SizedBox(height: height * 0.015),
+                    CommonTextField(
                       controller: _controller.pronounsController,
-                      decoration: InputDecoration(
-                        labelText: "Pronouns",
-                        labelStyle: TextStyle(
-                          color: Colors.grey.shade400,
-                          fontSize: width * 0.04, // Dynamic font size
-                        ),
-                      ),
+                      labelText: AppString.pronouns,
                     ),
-                    SizedBox(height: height * 0.015), // Dynamic spacing
-
-                    // Bio TextField
-                    TextField(
+                    SizedBox(height: height * 0.015),
+                    CommonTextField(
                       controller: _controller.bioController,
-                      decoration: InputDecoration(
-                        labelText: "Bio",
-                        labelStyle: TextStyle(
-                          color: Colors.grey.shade400,
-                          fontSize: width * 0.04, // Dynamic font size
-                        ),
-                      ),
+                      labelText: AppString.bio,
                     ),
-                    SizedBox(height: height * 0.02), // Dynamic spacing
-
-                    // Add link and banners section
-                    const Text("Add link", style: TextStyle(fontSize: 16)),
                     SizedBox(height: height * 0.02),
-                    const Text("Add banners", style: TextStyle(fontSize: 16)),
-
-                    // Gender TextField
-                    TextField(
-                      decoration: InputDecoration(
-                        suffixIcon:
-                            const Icon(Icons.arrow_forward_ios, size: 17),
-                        labelText: "Gender",
-                        labelStyle: TextStyle(
-                          color: Colors.grey.shade400,
-                          fontSize: width * 0.04, // Dynamic font size
-                        ),
-                      ),
+                    const Text(AppString.addLink,
+                        style: TextStyle(fontSize: 16)),
+                    SizedBox(height: height * 0.02),
+                    const Text(AppString.addBanners,
+                        style: TextStyle(fontSize: 16)),
+                    CommonTextField(
+                      controller: _controller.pronounsController,
+                      labelText: AppString.gender,
+                      suffixIcon: const Icon(Icons.arrow_forward_ios, size: 17),
                     ),
-                    SizedBox(height: height * 0.025), // Dynamic spacing
-
-                    // Switch for thread badge
-                    Obx(() {
-                      return Row(
-                        children: [
-                          const Text(
-                            "Show Thread badge",
-                            style: TextStyle(fontSize: 17),
-                          ),
-                          const Spacer(),
-                          Switch(
-                            value: _controller.isSwitched.value,
-                            onChanged: _controller.toggleSwitch,
-                          ),
-                        ],
-                      );
-                    }),
-                    SizedBox(height: height * 0.015), // Dynamic spacing
+                    SizedBox(height: height * 0.025),
+                    Obx(
+                      () {
+                        return Row(
+                          children: [
+                            const Text(
+                              AppString.showThread,
+                              style: TextStyle(fontSize: 17),
+                            ),
+                            const Spacer(),
+                            Switch(
+                              value: _controller.isSwitched.value,
+                              onChanged: _controller.toggleSwitch,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                    SizedBox(height: height * 0.015),
                   ],
                 ),
               ),
-
-              // Divider and additional sections
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -176,7 +130,7 @@ class EditProfileScreen extends StatelessWidget {
                   const Padding(
                     padding: EdgeInsets.only(left: 10),
                     child: Text(
-                      "Switch to professional account",
+                      AppString.switchProfessional,
                       style: TextStyle(fontSize: 18, color: Colors.blue),
                     ),
                   ),
@@ -184,7 +138,7 @@ class EditProfileScreen extends StatelessWidget {
                   const Padding(
                     padding: EdgeInsets.only(left: 10),
                     child: Text(
-                      "Personal information setting",
+                      AppString.personalInfo,
                       style: TextStyle(fontSize: 18, color: Colors.blue),
                     ),
                   ),
